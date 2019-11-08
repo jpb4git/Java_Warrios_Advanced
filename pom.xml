@@ -24,11 +24,7 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.28</version>
-		</dependency>
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -80,6 +76,11 @@
 			<groupId>io.vavr</groupId>
 			<artifactId>vavr-jackson</artifactId>
 			<version>0.10.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ratpack</groupId>
+			<artifactId>ratpack-core</artifactId>
+			<version>1.7.5</version>
 		</dependency>
 	</dependencies>
 
