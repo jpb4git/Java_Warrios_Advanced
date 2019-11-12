@@ -118,4 +118,8 @@ public class Warriors implements WarriorsAPI {
 		return this.games.get(gameId)
 			.map(Game::nextTurn);
 	}
+	@Override
+	public Option<Game> show(GameId gameId) {
+		return this.games.get(gameId);
+	}
 }
