@@ -106,9 +106,10 @@ public class ApplicationRat {
      * @return
      */
     public static  String postNewGame1( ObjectMapper mapper , WarriorsAPI warriors ,int map,int hero,String playerName) throws JsonProcessingException {
-        System.out.println("int hero  : " + hero );
+       
         BaseHero bh = (hero == 0 ) ? new Warrior() : new Magician();
         warriors.createGame(playerName,bh,warriors.availableMaps().iterator().next());
+        
         return  mapper.writeValueAsString((warriors.createGame(playerName,bh,warriors.availableMaps().iterator().next())));
     }
 
@@ -120,13 +121,25 @@ public class ApplicationRat {
      * @return
      */
     public static String getGameState(ObjectMapper mapper, WarriorsAPI warriors, String uuid){
-        System.out.println(uuid);
-        // pull matthieu
-        return "";
+        
+         String uuid = ctx.getPathTokens().get("uuid");
+        // FROM GameId Class 
+         Option<Game> game= this.warriors.show(GameId.parse(uuid));
+     
+        return  mapper.writeValueAsString(game);
     }
+    
+    /**
+     *
+     * @param mapper
+     * @param warriors
+     * @param uuid
+     * @return
+     */
     public static String playTurn(ObjectMapper mapper, WarriorsAPI warriors, String uuid){
-        System.out.println("Play turn "  +  uuid);
-
-        return "play turn ";
+     
+        Option<GameState> gameState = this.warriors.nextTurn(GameId.parse(uuid));
+        
+        return mapper.writeValueAsString(gameState);
     }
 }
