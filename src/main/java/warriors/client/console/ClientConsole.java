@@ -9,6 +9,11 @@ import warriors.contracts.Map;
 import warriors.contracts.WarriorsAPI;
 import warriors.engine.Warriors;
 
+
+
+
+
+
 public class ClientConsole {
 
 	enum MainMenuChoice {
