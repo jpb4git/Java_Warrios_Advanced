@@ -11,5 +11,7 @@ public interface WarriorsAPI {
 	GameState createGame(String playerName, Hero hero, Map map);
 	
 	Option<GameState> nextTurn(GameId gameId);
+	
+	Option<Game> show(GameId gameId);
 
 }
