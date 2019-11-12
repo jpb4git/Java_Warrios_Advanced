@@ -56,11 +56,7 @@ public class ApplicationRat {
                             .get("heroes",  ctx -> ctx.render(getHeros(mapper, warriors)))
                             .post("games", ctx -> {
                                     ctx.parse(GameCreate.class).then(
-
-                                            GameCreated -> {
-                                                GameCreated.getName();
-                                                ctx.render(postNewGame1(mapper ,warriors, GameCreated.getMap(), GameCreated.getHero(), GameCreated.getName()));
-                                            }
+                                            GameCreated -> {ctx.render(postNewGame1(mapper ,warriors, GameCreated.getMap(), GameCreated.getHero(), GameCreated.getName()));}
                                     );
                             })
 
@@ -107,10 +103,20 @@ public class ApplicationRat {
      */
     public static  String postNewGame1( ObjectMapper mapper , WarriorsAPI warriors ,int map,int hero,String playerName) throws JsonProcessingException {
        
+        // 
         BaseHero bh = (hero == 0 ) ? new Warrior() : new Magician();
-        warriors.createGame(playerName,bh,warriors.availableMaps().iterator().next());
         
-        return  mapper.writeValueAsString((warriors.createGame(playerName,bh,warriors.availableMaps().iterator().next())));
+        int index = 0;
+                    Map CurrentMap = null;
+                    for (Map map : this.warriors.availableMaps()) {
+                        if (game.getMap() == index) {
+                            CurrentMap = map;
+                            break;
+                        }
+                        index++;
+                    }
+       // warriors.createGame(playerName,bh,CurrentMap);
+        return  mapper.writeValueAsString((warriors.createGame(playerName,bh,CurrentMap)));
     }
 
     /**
