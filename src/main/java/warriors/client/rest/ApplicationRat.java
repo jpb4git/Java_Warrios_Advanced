@@ -8,6 +8,7 @@ import io.vavr.control.Option;
 import io.vavr.jackson.datatype.VavrModule;
 import ratpack.handling.Context;
 
+import ratpack.handling.Handler;
 import ratpack.http.MutableHeaders;
 
 import ratpack.server.RatpackServer;
@@ -46,7 +47,7 @@ class GameCreate {
 
 
 
-public class ApplicationRat {
+public class ApplicationRat  {
 
 
 
@@ -69,24 +70,19 @@ public class ApplicationRat {
                                     ctx.next();
                         })
 
-
                             .get(ctx -> ctx.render("Hello !!! "))
 
-                            //.get("games" , ctx -> ctx.render("get all games"))
-
+                            .path("games", context ->
+                            context.byMethod(
+                                    byMethodSpec -> byMethodSpec
+                                        .get(ctx -> getAllGames(ctx ,mapper, warriors))
+                                        .post(ctx ->  postNewGame(ctx, mapper ,warriors))
+                            ))
                             .get("maps", ctx -> getMaps(ctx ,mapper, warriors))
 
                             .get("heroes",  ctx -> ctx.render(getHeros(ctx, mapper, warriors)))
 
-                            /*.post("games", ctx -> { ctx.parse(GameCreate.class).then(GameCreated -> {ctx.render(postNewGame1(ctx, mapper ,warriors, GameCreated.getMap(), GameCreated.getHero(), GameCreated.getName()));});})*/
-
-                            .post("games" , ctx ->  postNewGame(ctx, mapper ,warriors))
-
-
-
                             .get("games/:uuid", ctx -> ctx.render(getGameState(ctx,mapper,warriors,ctx.getPathTokens().get("uuid"))))
-
-
 
                             .post("games/:uuid/turns", ctx -> ctx.render(playTurn(ctx,mapper,warriors,ctx.getPathTokens().get("uuid"))))
 
@@ -128,8 +124,6 @@ public class ApplicationRat {
      * @return
      */
     public static  String postNewGame1(Context ctx, ObjectMapper mapper , WarriorsAPI warriors ,int map,int hero,String playerName) throws JsonProcessingException {
-
-
 
 
         BaseHero bh = (hero == 0 ) ? new Warrior() : new Magician();
@@ -190,9 +184,14 @@ public class ApplicationRat {
         return mapper.writeValueAsString(gameState);
     }
 
-   public static void getAllGames(Context ctx, ObjectMapper mapper, WarriorsAPI warriors){
+   public static void getAllGames(Context ctx, ObjectMapper mapper, WarriorsAPI warriors) throws JsonProcessingException {
 
-       //Option<Game> game = warriors.show();
+       ctx.render( mapper.writeValueAsString(warriors.listGames()));
 
    }
+
+
+
 }
+
+
