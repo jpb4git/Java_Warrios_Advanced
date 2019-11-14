@@ -2,6 +2,7 @@ package warriors.engine;
 
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
+import io.vavr.collection.Stream;
 import io.vavr.control.Option;
 import warriors.contracts.GameId;
 import warriors.contracts.GameState;
@@ -112,7 +113,17 @@ public class Warriors implements WarriorsAPI {
 
 	@Override
 	public Iterable<Game> listGames() {
-		return null;
+		/**
+		 * try to send this Type io.vavr.collection.Map<GameId, Game>
+		 *
+		 *     to this one Iterable<Game>
+		 *
+		 *     for a gameId we have a game
+		 *     this.games.key()
+		 *     this.games.value()
+ 		 */
+		//System.out.println(this.games.values());
+		return  this.games.values();
 	}
 
 	@Override
