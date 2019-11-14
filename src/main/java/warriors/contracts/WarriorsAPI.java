@@ -1,12 +1,15 @@
 package warriors.contracts;
 
 import io.vavr.control.Option;
+import warriors.engine.Game;
 
 public interface WarriorsAPI {
 	
 	Iterable<Hero> availableHeroes();
 	
 	Iterable<Map> availableMaps();
+
+	Iterable<Game> listGames();
 	
 	GameState createGame(String playerName, Hero hero, Map map);
 	

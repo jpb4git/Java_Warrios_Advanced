@@ -42,7 +42,8 @@ public class ClientConsole {
 		Stream
 			.iterate(
 				warriors.createGame(playerName, hero, map),
-				gameState -> warriors.nextTurn(gameState.getGameId()).getOrElseThrow(IllegalStateException::new))
+				gameState -> warriors.nextTurn(gameState.getGameId()).getOrElseThrow(IllegalStateException::new)
+			)
 			.peek(console::displayTurn)
 			.filter(state -> state.getGameStatus() != GameState.GameStatus.IN_PROGRESS)
 			.head();

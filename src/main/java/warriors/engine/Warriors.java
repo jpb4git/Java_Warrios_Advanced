@@ -21,6 +21,7 @@ import warriors.model.WeaponCase;
 
 public class Warriors implements WarriorsAPI {
 
+	// imutable immuable
 	private io.vavr.collection.Map<GameId, Game> games;
 
 	public Warriors() {
@@ -96,14 +97,22 @@ public class Warriors implements WarriorsAPI {
 				new EmptyCase()));
 	}
 
+
 	@Override
 	public Iterable<Hero> availableHeroes() {
 		return List.of(new Warrior(), new Magician());
 	}
 
+
 	@Override
 	public Iterable<Map> availableMaps() {
 		return List.of(this.defaultMap());
+	}
+
+
+	@Override
+	public Iterable<Game> listGames() {
+		return null;
 	}
 
 	@Override
@@ -116,7 +125,7 @@ public class Warriors implements WarriorsAPI {
 	@Override
 	public Option<GameState> nextTurn(GameId gameId) {
 		return this.games.get(gameId)
-			.map(Game::nextTurn);
+			.map(Game -> Game.nextTurn());
 	}
 	@Override
 	public Option<Game> show(GameId gameId) {
