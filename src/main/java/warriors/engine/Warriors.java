@@ -123,7 +123,8 @@ public class Warriors implements WarriorsAPI {
 		 *     this.games.value()
  		 */
 		//System.out.println(this.games.values());
-		return  this.games.values();
+		List gamesList = this.games.values().toList();
+		return gamesList;
 	}
 
 	@Override
