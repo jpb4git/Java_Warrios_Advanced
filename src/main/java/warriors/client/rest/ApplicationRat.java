@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.vavr.control.Option;
 import io.vavr.jackson.datatype.VavrModule;
+import ratpack.func.Action;
+import ratpack.handling.Chain;
 import ratpack.handling.Context;
 
 import ratpack.handling.Handler;
@@ -60,36 +62,44 @@ public class ApplicationRat  {
 
         RatpackServer.start(server -> server
 
-                        .handlers(  chain -> chain
-
-
-                        // rewriting Headers CORS limitation
-                        .all(ctx -> {
-                                    ctx.getResponse().getHeaders().add("Access-Control-Allow-Origin", "*");
-                                    ctx.getResponse().getHeaders().add("Access-Control-Allow-Headers", "*");
-                                    ctx.next();
-                        })
-
-                            .get(ctx -> ctx.render("Hello !!! "))
-
-                            .path("games", context ->
-                            context.byMethod(
-                                    byMethodSpec -> byMethodSpec
-                                        .get(ctx -> getAllGames(ctx ,mapper, warriors))
-                                        .post(ctx ->  postNewGame(ctx, mapper ,warriors))
-                            ))
-                            .get("maps", ctx -> getMaps(ctx ,mapper, warriors))
-
-                            .get("heroes",  ctx -> ctx.render(getHeros(ctx, mapper, warriors)))
-
-                            .get("games/:uuid", ctx -> ctx.render(getGameState(ctx,mapper,warriors,ctx.getPathTokens().get("uuid"))))
-
-                            .post("games/:uuid/turns", ctx -> ctx.render(playTurn(ctx,mapper,warriors,ctx.getPathTokens().get("uuid"))))
+                        .handlers(ApplicationRat.handler()
 
 
         ));
     }
 
+    public static Action<Chain> handler() {
+
+        WarriorsAPI warriors  = new Warriors();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new VavrModule());
+
+        return chain -> chain
+
+
+        // rewriting Headers CORS limitation
+        .all(ctx -> {
+                    ctx.getResponse().getHeaders().add("Access-Control-Allow-Origin", "*");
+                    ctx.getResponse().getHeaders().add("Access-Control-Allow-Headers", "*");
+                    ctx.next();
+        })
+
+            .get(ctx -> ctx.render("Hello !!! "))
+
+            .path("games", context ->
+            context.byMethod(
+                    byMethodSpec -> byMethodSpec
+                        .get(ctx -> ctx.render(getAllGames(ctx ,mapper, warriors)))
+                        .post(ctx ->  postNewGame(ctx, mapper ,warriors))
+            ))
+            .get("maps", ctx -> ctx.render(getMaps(ctx ,mapper, warriors)))
+
+            .get("heroes",  ctx -> ctx.render(getHeros(ctx, mapper, warriors)))
+
+            .get("games/:uuid", ctx -> ctx.render(getGameState(ctx,mapper,warriors,ctx.getPathTokens().get("uuid"))))
+
+            .post("games/:uuid/turns", ctx -> ctx.render(playTurn(ctx,mapper,warriors,ctx.getPathTokens().get("uuid"))));
+    }
 
     /**
      *
@@ -98,11 +108,11 @@ public class ApplicationRat  {
      * @return
      * @throws JsonProcessingException
      */
-    public static void  getMaps(Context ctx, ObjectMapper mapper, WarriorsAPI warriors) throws JsonProcessingException {
+    public static String  getMaps(Context ctx, ObjectMapper mapper, WarriorsAPI warriors) throws JsonProcessingException {
 
 
 
-        ctx.render(mapper.writeValueAsString(warriors.availableMaps()));
+        return mapper.writeValueAsString(warriors.availableMaps());
     }
 
     /**
@@ -150,7 +160,6 @@ public class ApplicationRat  {
 
     }
 
-
     /**
      *
      * @param mapper
@@ -184,9 +193,9 @@ public class ApplicationRat  {
         return mapper.writeValueAsString(gameState);
     }
 
-   public static void getAllGames(Context ctx, ObjectMapper mapper, WarriorsAPI warriors) throws JsonProcessingException {
+    public static String  getAllGames(Context ctx, ObjectMapper mapper, WarriorsAPI warriors) throws JsonProcessingException {
 
-       ctx.render( mapper.writeValueAsString(warriors.listGames()));
+       return mapper.writeValueAsString(warriors.listGames());
 
    }
 
